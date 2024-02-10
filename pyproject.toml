@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "python-metallum"
+version = "1.1.0"
+description = "Python API for www.metal-archives.com"
+license = "MIT"
+authors = ['Lachlan Charlick <lachlan.charlick@gmail.com>']
+readme = "README.md"
+repository = "https://github.com/lcharlick/python-metallum"
+keywords = []
+classifiers = []
+
+[tool.poetry.dependencies]
+python = ">=3"
+requests = "*"
+requests-cache = "*"
+pyquery = "*"
+python-dateutil = "*"
+
+[tool.poetry.scripts]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
