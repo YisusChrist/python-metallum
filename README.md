@@ -13,7 +13,6 @@ Artist search
 ```python
 import metallum
 
-
 # Search bands matching term
 bands = metallum.band_search('metallica')
 # -> [<SearchResult: Metallica | Thrash Metal (early), Hard Rock/Heavy/Thrash Metal (later) | United States>]
@@ -60,8 +59,6 @@ metallum.album_search('seventh', strict=False)
 # Search albums by band
 metallum.album_search('seventh', band='iron maiden', strict=False)
 # -> [<SearchResult: Iron Maiden | Seventh Son of a Seventh Son | Full-length>]
-
 ```
 
 Refer to source and doctests for detailed usage
-
