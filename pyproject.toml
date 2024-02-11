@@ -10,11 +10,11 @@ keywords = []
 classifiers = []
 
 [tool.poetry.dependencies]
-python = ">=3.8"
-requests = "*"
-requests-cache = "*"
-pyquery = "*"
-python-dateutil = "*"
+python = ">=3.8,<4.0"
+requests = "^2.31.0"
+requests-cache = "^1.1.1"
+pyquery = "^2.0.0"
+python-dateutil = "^2.8.2"
 lxml = "^5.1.0"
 
 [tool.poetry.scripts]
