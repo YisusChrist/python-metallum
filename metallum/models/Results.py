@@ -3,7 +3,8 @@ from typing import List
 
 from pyquery import PyQuery
 
-from metallum.models import AlbumWrapper, Band
+from metallum.models import Album, AlbumWrapper, Band
+from metallum.models.Lyrics import Lyrics
 from metallum.models.Metallum import Metallum
 from metallum.utils import split_genres
 
@@ -17,8 +18,12 @@ class SearchResult(list):
         super().__init__()
         for detail in details:
             if re.match("^<a href.*", detail):
-                d = PyQuery(detail)
-                self.append(d("a").text())
+                lyrics_link = re.search('id="lyricsLink_(\d+)"', detail)
+                if lyrics_link is not None:
+                    self.append(lyrics_link[1])
+                else:
+                    d = PyQuery(detail)
+                    self.append(d("a").text())
             else:
                 self.append(detail)
 
@@ -74,6 +79,10 @@ class BandResult(SearchResult):
         """
         return self[2]
 
+    @property
+    def other(self) -> str:
+        return self[3:]
+
 
 class AlbumResult(SearchResult):
 
@@ -112,3 +121,73 @@ class AlbumResult(SearchResult):
     @property
     def band_name(self) -> str:
         return self[0]
+
+
+class SongResult(SearchResult):
+
+    def __init__(self, details):
+        super().__init__(details)
+        self._details = details
+        self._resultType = None
+
+    def get(self) -> "SongResult":
+        return self
+
+    @property
+    def id(self) -> str:
+        """
+        >>> song.id
+        '3449'
+        """
+        return re.search(r"(\d+)", self[5]).group(0)
+
+    @property
+    def title(self) -> str:
+        return self[3]
+
+    @property
+    def type(self) -> str:
+        return self[2]
+
+    @property
+    def bands(self) -> List["Band"]:
+        bands = []
+        el = PyQuery(self._details[0]).wrap("<div></div>")
+        for a in el.find("a"):
+            url = PyQuery(a).attr("href")
+            id = re.search(r"\d+$", url).group(0)
+            bands.append(Band("bands/_/{0}".format(id)))
+        return bands
+
+    @property
+    def band_name(self) -> str:
+        return self[0]
+
+    @property
+    def album(self) -> "Album":
+        url = PyQuery(self._details[1]).attr("href")
+        id = re.search("\d+$", url).group(0)
+        return Album("albums/_/_/{0}".format(id))
+
+    @property
+    def album_name(self) -> str:
+        return self[1]
+
+    @property
+    def genres(self) -> List[str]:
+        """
+        >>> song.genres
+        ['Heavy Metal', 'NWOBHM']
+        """
+        genres = []
+        for genre in self[4].split(" | "):
+            genres.extend(split_genres(genre.strip()))
+        return genres
+
+    @property
+    def lyrics(self) -> "Lyrics":
+        """
+        >>> str(song.lyrics).split('\\n')[0]
+        'I am a man who walks alone'
+        """
+        return Lyrics(self.id)

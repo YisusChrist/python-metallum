@@ -3,11 +3,11 @@
 """Python interface for www.metal-archives.com"""
 
 import requests_cache
-from requests_cache.core import remove_expired_responses
+from requests_cache import remove_expired_responses
 
 from metallum.consts import CACHE_FILE
 from metallum.models.AlbumTypes import AlbumTypes
-from metallum.operations import album_for_id, band_search
+from metallum.operations import album_for_id, band_search, song_search
 
 requests_cache.install_cache(cache_name=CACHE_FILE, expire_after=300)
 remove_expired_responses()
@@ -28,5 +28,10 @@ if __name__ == "__main__":
 
     # Objects for multi-disc album testing
     multi_disc_album = album_for_id("338756")
+
+    # Objects for song search testing
+    song = song_search(
+        "Fear of the Dark", band="Iron Maiden", release="Fear of the Dark"
+    )[0]
 
     doctest.testmod(globs=locals())
