@@ -5,8 +5,8 @@ import time
 import requests_cache
 from pyquery import PyQuery
 
-from metallum.consts import CACHE_FILE, REQUEST_TIMEOUT, USER_AGENT
-from metallum.utils import make_absolute
+from metallum.consts import CACHE_FILE, REQUEST_TIMEOUT
+from metallum.utils import make_absolute, get_user_agent
 
 
 class Metallum:
@@ -16,7 +16,7 @@ class Metallum:
         self._session = requests_cache.CachedSession(cache_name=CACHE_FILE)
         self._session.hooks = {"response": self._make_throttle_hook()}
         self._session.headers = {
-            "User-Agent": USER_AGENT,
+            # "User-Agent": get_user_agent(),
             "Accept-Encoding": "gzip",
         }
 

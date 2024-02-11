@@ -2,7 +2,10 @@
 
 import datetime
 import re
+from functools import lru_cache
 from typing import List
+
+from fake_useragent import UserAgent
 
 from metallum.consts import BASE_URL, UTC_OFFSET
 
@@ -107,3 +110,11 @@ def parse_duration(s: str) -> int:
     if len(parts) == 3:
         seconds += int(parts[0]) * 3600
     return seconds
+
+
+@lru_cache
+def get_user_agent():
+    """Get a random user agent."""
+    ua = UserAgent().getSafari["useragent"]
+    print(ua)
+    return ua
