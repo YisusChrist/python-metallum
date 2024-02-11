@@ -1,4 +1,8 @@
+from datetime import datetime
+
 import pytest
+
+from metallum.models import AlbumTypes
 from metallum.models.AlbumTypes import AlbumTypes
 from metallum.operations import album_for_id, band_search, song_search
 
@@ -41,6 +45,13 @@ def song():
     )[0]
 
 
+@pytest.fixture
+def metallica_band():
+    # Search for Metallica band
+    bands = band_search("metallica")
+    return bands[0].get()
+
+
 def test_band_search(band):
     assert band.name == "Metallica"
 
@@ -61,3 +72,40 @@ def test_song_search(song):
     assert song.title == "Fear of the Dark"
     assert song.bands[0].name == "Iron Maiden"
     assert song.album.title == "Fear of the Dark"
+
+
+def test_band_name(metallica_band):
+    # Check band name
+    assert metallica_band.name == "Metallica"
+
+
+def test_band_albums(metallica_band):
+    # Check if albums exist
+    assert len(metallica_band.albums) > 0
+
+
+def test_band_full_length_albums(metallica_band):
+    # Check if full-length albums exist
+    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH)
+    assert len(full_length_albums) > 0
+
+
+def test_album_title_and_date(metallica_band):
+    # Get the third full-length album (Master of Puppets)
+    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH)
+    album = full_length_albums[2]
+
+    # Check album title
+    assert album.title == "Master of Puppets"
+
+    # Check album date
+    assert album.date == datetime(1986, 3, 3, 0, 0)
+
+
+def test_album_tracks(metallica_band):
+    # Get the third full-length album (Master of Puppets)
+    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH)
+    album = full_length_albums[2]
+
+    # Check if tracks exist
+    assert len(album.tracks) > 0
