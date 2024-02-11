@@ -49,5 +49,4 @@ class Metallum:
             str: The page content
         """
         res = self._session.get(make_absolute(url))
-        # print_response_summary(res)
         return res.text
