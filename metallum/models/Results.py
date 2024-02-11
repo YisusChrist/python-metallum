@@ -18,7 +18,7 @@ class SearchResult(list):
         super().__init__()
         for detail in details:
             if re.match("^<a href.*", detail):
-                lyrics_link = re.search('id="lyricsLink_(\d+)"', detail)
+                lyrics_link = re.search(r'id="lyricsLink_(\d+)"', detail)
                 if lyrics_link is not None:
                     self.append(lyrics_link[1])
                 else:
@@ -166,7 +166,7 @@ class SongResult(SearchResult):
     @property
     def album(self) -> "Album":
         url = PyQuery(self._details[1]).attr("href")
-        id = re.search("\d+$", url).group(0)
+        id = re.search(r"\d+$", url).group(0)
         return Album("albums/_/_/{0}".format(id))
 
     @property
