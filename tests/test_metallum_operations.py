@@ -2,7 +2,6 @@ from datetime import datetime
 
 import pytest
 
-from metallum.models import AlbumTypes
 from metallum.models.AlbumTypes import AlbumTypes
 from metallum.operations import album_for_id, band_search, song_search
 
