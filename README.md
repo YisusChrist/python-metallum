@@ -59,7 +59,7 @@
 
 ## Introduction
 
-This is a versatile yet unofficial python API for the well known [Metal Archives](https://www.metal-archives.com/) website, also known as Encyclopaedia Metallum. It allows you to search for bands, albums and songs to get detailed information about them.
+This is a versatile yet unofficial python API for the well known [Metal Archives](https://www.metal-archives.com/) website, also known as `Encyclopaedia Metallum`. It allows you to search for bands, albums and songs to get detailed information about them.
 
 Here is a simple UML diagram of the main model classes used in the project:
 
