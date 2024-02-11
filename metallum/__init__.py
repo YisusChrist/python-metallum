@@ -6,7 +6,7 @@ import requests_cache
 from requests_cache import remove_expired_responses
 
 from metallum.consts import CACHE_FILE
-from metallum.models.AlbumTypes import AlbumTypes
+from metallum.models.album_types import AlbumTypes
 from metallum.operations import album_for_id, band_search, song_search
 
 requests_cache.install_cache(cache_name=CACHE_FILE, expire_after=300)

@@ -8,6 +8,16 @@ from metallum.consts import BASE_URL, UTC_OFFSET
 
 
 def map_params(params, m):
+    """
+    Map parameters to their respective keys.
+
+    Args:
+        params: The parameters to map.
+        m: The mapping.
+
+    Returns:
+        dict: The mapped parameters.
+    """
     res = {}
     for k, v in params.items():
         if v is not None:
@@ -17,44 +27,78 @@ def map_params(params, m):
 
 def split_genres(s: str) -> List[str]:
     """
-    Split by comma separator:
-    >>> split_genres('Thrash Metal (early), Hard Rock/Heavy/Thrash Metal (later)')
-    ['Thrash Metal (early)', 'Hard Rock/Heavy/Thrash Metal (later)']
+    Split a string of genres into a list of genres.
 
-    Split by semicolon separator:
-    >>> split_genres('Deathcore (early); Melodic Death/Groove Metal')
-    ['Deathcore (early)', 'Melodic Death/Groove Metal']
+    Args:
+        s: The string of genres.
 
-    Handle no commas:
-    >>> split_genres('Heavy Metal')
-    ['Heavy Metal']
+    Returns:
+        list: The list of genres.
 
-    Handle commas within parentheses:
-    >>> split_genres('Heavy Metal/Hard Rock (early, later), Thrash Metal (mid)')
-    ['Heavy Metal/Hard Rock (early, later)', 'Thrash Metal (mid)']
+    Examples:
+        Split by comma separator:
+        >>> split_genres('Thrash Metal (early), Hard Rock/Heavy/Thrash Metal (later)')
+        ['Thrash Metal (early)', 'Hard Rock/Heavy/Thrash Metal (later)']
+
+        Split by semicolon separator:
+        >>> split_genres('Deathcore (early); Melodic Death/Groove Metal')
+        ['Deathcore (early)', 'Melodic Death/Groove Metal']
+
+        Handle no commas:
+        >>> split_genres('Heavy Metal')
+        ['Heavy Metal']
+
+        Handle commas within parentheses:
+        >>> split_genres('Heavy Metal/Hard Rock (early, later), Thrash Metal (mid)')
+        ['Heavy Metal/Hard Rock (early, later)', 'Thrash Metal (mid)']
     """
     return re.split(r"(?:,|;)\s*(?![^()]*\))", s)
 
 
 def make_absolute(endpoint: str) -> str:
-    """Make relative URLs absolute"""
-    return "{0}/{1}".format(BASE_URL, endpoint)
+    """
+    Make relative URLs absolute
+
+    Args:
+        endpoint: The relative URL.
+
+    Returns:
+        str: The absolute URL.
+    """
+    return f"{BASE_URL}/{endpoint}"
 
 
 def offset_time(t: datetime.datetime) -> datetime.datetime:
-    """Convert server time to UTC"""
+    """
+    Convert server time to UTC
+
+    Args:
+        t: The server time.
+
+    Returns:
+        datetime.datetime: The UTC time.
+    """
     td = datetime.timedelta(hours=UTC_OFFSET)
     return t + td
 
 
 def parse_duration(s: str) -> int:
     """
-    >>> parse_duration('00:01')
-    1
-    >>> parse_duration('03:33')
-    213
-    >>> parse_duration('01:14:00')
-    4440
+    Parse a duration string into seconds.
+
+    Args:
+        s: The duration string.
+
+    Returns:
+        int: The duration in seconds.
+
+    Examples:
+        >>> parse_duration('00:01')
+        1
+        >>> parse_duration('03:33')
+        213
+        >>> parse_duration('01:14:00')
+        4440
     """
     parts = s.split(":")
     seconds = int(parts[-1])

@@ -1,6 +1,8 @@
+"""Similar artists tab on the band page"""
+
 from pyquery import PyQuery
 
-from metallum.models.Metallum import Metallum
+from metallum.models.metallum import Metallum
 
 
 class SimilarArtists(Metallum, list):
@@ -21,12 +23,11 @@ class SimilarArtists(Metallum, list):
             self.result_count = i
 
     def __repr__(self):
-
-        def similar_artist_str(SimilarArtistsResult):
-            return f"{SimilarArtistsResult.name} ({SimilarArtistsResult.score})"
+        def similar_artist_str(similar_artists_result):
+            return f"{similar_artists_result.name} ({similar_artists_result.score})"
 
         if not self:
             return "<SimilarArtists: None>"
         names = list(map(similar_artist_str, self))
         s = " | ".join(names)
-        return "<SimilarArtists: {0}>".format(s)
+        return f"<SimilarArtists: {s}>"

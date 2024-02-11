@@ -1,3 +1,5 @@
+"""Models for Metal Archives"""
+
 import datetime
 import re
 from typing import List, Optional
@@ -5,16 +7,35 @@ from typing import List, Optional
 from dateutil import parser as date_parser
 from pyquery import PyQuery
 
-from metallum.models.AlbumTypes import AlbumTypes
-from metallum.models.Lyrics import Lyrics
-from metallum.models.Metallum import Metallum
-from metallum.models.MetallumCollection import MetallumCollection
-from metallum.models.MetallumEntity import MetallumEntity
-from metallum.models.SimilarArtists import SimilarArtists
+from metallum.models.album_types import AlbumTypes
+from metallum.models.lyrics import Lyrics
+from metallum.models.metallum import Metallum
+from metallum.models.metallum_collection import MetallumCollection
+from metallum.models.metallum_entity import MetallumEntity
+from metallum.models.similar_artists import SimilarArtists
 from metallum.utils import offset_time, parse_duration, split_genres
 
 
+def _get_bands_list(page) -> List["Band"]:
+    """
+    Get a list of bands from a page
+
+    Args:
+        page: PyQuery object
+
+    Returns:
+        List[Band]
+    """
+    bands = []
+    for a in page.find("a"):
+        url = PyQuery(a).attr("href")
+        band_id = re.search(r"\d+$", url).group(0)
+        bands.append(Band(f"bands/_/{band_id}"))
+    return bands
+
+
 class TrackCollection(MetallumCollection):
+    """Represents a collection of tracks on Metal Archives"""
 
     def __init__(self, url, album):
         super().__init__(url)
@@ -36,12 +57,10 @@ class TrackCollection(MetallumCollection):
 
 
 class Band(MetallumEntity):
-
-    def __init__(self, url):
-        super().__init__(url)
+    """Represents a band on Metal Archives"""
 
     def __repr__(self):
-        return "<Band: {0}>".format(self.name)
+        return f"<Band: {self.name}>"
 
     @property
     def id(self) -> str:
@@ -54,7 +73,11 @@ class Band(MetallumEntity):
 
     @property
     def url(self) -> str:
-        return "bands/_/{0}".format(self.id)
+        """
+        >>> band.url
+        'bands/_/125'
+        """
+        return f"bands/_/{self.id}"
 
     @property
     def added(self) -> Optional[datetime.datetime]:
@@ -132,7 +155,8 @@ class Band(MetallumEntity):
     def themes(self) -> List[str]:
         """
         >>> band.themes
-        ['Introspection', 'Anger', 'Corruption', 'Deceit', 'Death', 'Life', 'Metal', 'Literature', 'Films']
+        ['Introspection', 'Anger', 'Corruption', 'Deceit', 'Death', 'Life',
+        'Metal', 'Literature', 'Films']
         """
         return self._dd_text_for_label("Themes:").split(", ")
 
@@ -175,21 +199,29 @@ class Band(MetallumEntity):
         >>> type(band.albums[0])
         <class '__main__.AlbumWrapper'>
         """
-        url = "band/discography/id/{0}/tab/all".format(self.id)
+        url = f"band/discography/id/{self.id}/tab/all"
         return AlbumCollection(url)
 
     @property
     def similar_artists(self) -> "SimilarArtists":
         """
-                >>> band.similar_artists
-        <SimilarArtists: Megadeth (488) | Testament (420) | Exodus (212) | Evile (206) | Anthrax (182) | Death Angel (148) | Diamond Head (119) | Xentrix (115) | Annihilator (111) | Newsted (108) | Metal Church (105) | Heathen (105) | Flotsam and Jetsam (104) | Slayer (71) | Trivium (70) | Overkill (66) | Artillery (58) | Mortal Sin (58) | Volbeat (55) | Sacred Reich (48) | Paradox (44) | Slammer (34) | Pantera (33) | Corrosion of Conformity (30) | Am I Blood (30) | Alice in Chains (25) | Stone (25) | Motörhead (21) | Dark Angel (20) | Vio-lence (20) | Meliah Rage (19) | Machine Head (18) | Onslaught (18) | Tantara (18) | Kreator (17) | Outrage (17) | Blitzkrieg (16) | Znöwhite (16) | Forbidden (15) | Suicidal Tendencies (15) | Cyclone Temple (15) | Whiplash (15) | Havok (14) | Defiance (14) | Accu§er (13) | Deliverance (13) | Lȧȧz Rockit (13) | Reign of Fury (13) | Woslom (13) | Kat (12) | Iced Earth (12) | 4Arm (12) | Acrassicauda (11) | Wrathchild America (11) | Sepultura (11) | Power Trip (11) | Apocalypse (11) | Ellefson (11) | Metal Allegiance (11) | Alcoholica (11) | Wildhunt (11) | Mercyful Fate (10) | Железный Поток (10) | Destruction (10) | Sufosia (10) | Nuclear Assault (9) | Tourniquet (9) | Shah (9) | Faith No More (8) | Channel Zero (8) | Mantic Ritual (8) | Dust Bolt (8) | Hammerhedd (8) | Eradikator (8) | Ramp (8) | Earthquake (8) | Anesthesia (8) | Inciter (8) | Hirax (7) | Shadows Fall (7) | Faith or Fear (7) | Game Over (7) | Holocaust (7) | Sweet Savage (7) | Blackened (7) | Morgana Lefay (7) | Hellraiser (7) | Razor (7) | Posehn (7) | Eternal Decision (6) | Armored Saint (6) | Austrian Death Machine (6) | Hatriot (6) | Vindicator (6) | Dublin Death Patrol (6) | Sylosis (6) | Angelus Apatrida (6) | Addictive (6) | Hunter (6) | Meshiaak (6) | Vader (6) | Living Sacrifice (6) | Thrashback (6) | Venom Inc. (6) | Athena (6) | Prong (5) | Danzig (5) | Thrashsteel (5) | Fallen Angel (5) | Lost Society (5) | Ekhymosis (5) | Attomica (5) | Raven (5) | In.Si.Dia (5) | Turbo (5) | Act of Defiance (5) | Hellripper (5) | Suicidal Angels (5) | Phantom Lord (5) | Sanctity (5) | Wargasm (5) | Seducer (5) | Calipash (5) | Detritus (5) | Enforcer (5) | Mason (5) | Tyrant's Reign (5) | Braindamage (5) | Vortex (5) | Abandoned (5) | Arbitrater (5) | Bleak House (5) | Metallic Ass (5) | Modifidious (5) | Apocalyptica (4) | The Worshyp (4) | Airdash (4) | Mezzrow (4) | White Zombie (4) | DBC (4) | Diamond Plate (4) | Equinox (4) | Excel (4) | Acrophet (4) | Black Track (4) | Panic (4) | Adamantine (4) | Critical Solution (4) | Perzonal War (4) | Phantasm (4) | Shredhead (4) | Steel Fury (4) | Alexander Palitsin (4) | I.N.C. (4) | Wrath (4) | Fight (4) | Kazjurol (4) | King Diamond (4) | Manditory (4) | Allegiance (4) | Altitudes & Attitude (4) | Dead On (4) | Fallout (4) | Hermética (4) | Lethal (4) | Tonic Breed (4) | Wiplash (4) | Animator (4) | Astharoth (4) | Disciples of Power (4) | Extrema (4) | Face of Anger (4) | Fatality (4) | Insecurity (4) | Nasty Savage (4) | Pentagram (4) | Potential Threat (4) | Prophecy (4) | Algebra (4) | Criminal (4) | Nuclear Simphony (4) | Oil (4) | Planleft (4) | Practice to Deceive (4) | Razgate (4) | Revtend (4) | Ritual Servant (4) | Space Chaser (4) | Stormdeath (4) | Teronation (4) | Victim (4) | Vingador (4) | Vulture (4) | Legion (4) | Flacmans Port (4) | Four Noses (4) | Half-Lit (4) | Sabbat (3) | Ancesttral (3) | Target (3) | Симфония Разрушения (3) | Piranha (3) | Hatrix (3) | Souls at Zero (3) | Toranaga (3) | Bitter End (3) | Demolition Train (3) | Killers (3) | Legion (3) | Rhythm of Fear (3) | Sacrifice (3) | Wolfpack Unleashed (3) | Anihilated (3) | Dethrone (3) | Viking (3) | Acridity (3) | Dissolved (3) | Dogma (3) | Exciter (3) | Forced Entry (3) | Nihilist (3) | Quorthon (3) | Taurus (3) | Yosh (3) | Abaxial (3) | Battalion (3) | Disaster Area (3) | Hate FX (3) | Horcas (3) | LawShed (3) | Prowler (3) | Strip Mind (3) | The Force (3) | Glenn Tipton (3) | Next (3) | Against (3) | Deliverance (3) | Hatchet (3) | HI-GH (3) | In Malice's Wake (3) | King Gizzard & the Lizard Wizard (3) | Stone Vengeance (3) | Terror Empire (3) | Thrash Bombz (3) | Thresher (3) | Aleister (3) | Alpha Warhead (3) | Amboog-a-Lard (3) | Anesthesia (3) | Blatant Disarray (3) | Chronical Disturbance (3) | Coldsteel (3) | Cro-Mags (3) | Crossbones (3) | Darkness (3) | DesExult (3) | Disturbed (3) | Drünkards (3) | E.S.T. (3) | Eradicator (3) | F5 (3) | Fierce Allegiance (3) | Filter (3) | Hostile Rage (3) | Incursion Dementa (3) | Jesus Freaks (3) | Metalord (3) | Mystrez (3) | Necrosis (3) | Night Viper (3) | Nightfyre (3) | Serpentor (3) | Total Annihilation (3) | Violator (3)>
+        Get a list of similar artists to the current band.
+
+        Examples:
+            >>> band.similar_artists
+            <SimilarArtists: Megadeth (488) | Testament (420) | Exodus (212) |
+            Evile (206) | Anthrax (182) | Death Angel (148) | Diamond Head
+            (119) | Xentrix (115) | Annihilator (111) | Newsted (108) | Metal
+            Church (105) | Heathen (105) | Flotsam and Jetsam (104) | Slayer
+            ...
         """
 
         url = "band/ajax-recommendations/id/" + self.id + "/showMoreSimilar/1"
         return SimilarArtists(url, SimilarArtistsResult)
 
 
-class Track(object):
+class Track:
+    """Represents a track on Metal Archives"""
 
     def __init__(self, elem, album, disc_number, overall_number):
         self._elem = elem
@@ -198,7 +230,7 @@ class Track(object):
         self._overall_number = overall_number
 
     def __repr__(self):
-        return "<Track: {0} ({1})>".format(self.title, self.duration)
+        return f"<Track: {self.title} ({self.duration})>"
 
     @property
     def id(self) -> str:
@@ -316,12 +348,10 @@ class Track(object):
 
 
 class Album(MetallumEntity):
-
-    def __init__(self, url):
-        super().__init__(url)
+    """Represents an album on Metal Archives"""
 
     def __repr__(self):
-        return "<Album: {0}>".format(self.title)
+        return f"<Album: {self.title}>"
 
     @property
     def id(self) -> str:
@@ -334,7 +364,11 @@ class Album(MetallumEntity):
 
     @property
     def url(self) -> str:
-        return "albums/_/_/{0}".format(self.id)
+        """
+        >>> album.url
+        'albums/_/_/547'
+        """
+        return f"albums/_/_/{self.id}"
 
     @property
     def bands(self) -> List[Band]:
@@ -347,12 +381,8 @@ class Album(MetallumEntity):
         >>> split_album.bands
         [<Band: Lunar Aurora>, <Band: Paysage d'Hiver>]
         """
-        bands = []
-        for a in self._page(".band_name").find("a"):
-            url = PyQuery(a).attr("href")
-            id = re.search(r"\d+$", url).group(0)
-            bands.append(Band("bands/_/{0}".format(id)))
-        return bands
+        page = self._page(".band_name")
+        return _get_bands_list(page)
 
     @property
     def added(self) -> Optional[datetime.datetime]:
@@ -404,8 +434,7 @@ class Album(MetallumEntity):
         s = self._page("table.table_lyrics td strong").text()
         if s:
             return parse_duration(s)
-        else:
-            return 0
+        return 0
 
     @property
     def date(self) -> Optional[datetime.datetime]:
@@ -502,6 +531,7 @@ class Album(MetallumEntity):
 
 
 class AlbumCollection(MetallumCollection):
+    """Represents a collection of albums on Metal Archives"""
 
     def __init__(self, url):
         super().__init__(url)
@@ -535,7 +565,7 @@ class AlbumWrapper(Metallum):
             self._album = LazyAlbum(elem)
 
     def __repr__(self):
-        return "<Album: {0} ({1})>".format(self.title, self.type)
+        return f"<Album: {self.title} ({self.type})>"
 
     def __getattr__(self, name):
         if not hasattr(self._album, name) and hasattr(Album, name):
@@ -567,6 +597,7 @@ class AlbumWrapper(Metallum):
 
 
 class LazyAlbum:
+    """LazyAlbum is a placeholder for Album instances that are not yet created"""
 
     def __init__(self, elem):
         self._elem = elem
@@ -582,7 +613,11 @@ class LazyAlbum:
 
     @property
     def url(self) -> str:
-        return "albums/_/_/{0}".format(self.id)
+        """
+        >>> album.url
+        'albums/_/_/547'
+        """
+        return f"albums/_/_/{self.id}"
 
     @property
     def title(self) -> str:
@@ -620,17 +655,33 @@ class SimilarArtistsResult(list):
         for d in details:
             self.append(d)
 
+    def __repr__(self):
+        s = " | ".join(self[1:])
+        return f"<SimilarArtist: {s}>"
+
     @property
     def id(self) -> str:
+        """
+        >>> search_results[0].id
+        '125'
+        """
         # url = PyQuery(self._details[0])('a').attr('href')
         return re.search(r"\d+$", self[0]).group(0)
 
     @property
     def url(self) -> str:
-        return "bands/_/{0}".format(self.id)
+        """
+        >>> search_results[0].url
+        'bands/_/125'
+        """
+        return f"bands/_/{self.id}"
 
     @property
     def name(self) -> str:
+        """
+        >>> search_results[0].name
+        'Metallica'
+        """
         return self[1]
 
     @property
@@ -643,15 +694,25 @@ class SimilarArtistsResult(list):
 
     @property
     def genres(self) -> List[str]:
+        """
+        >>> search_results[0].genres
+        ['Thrash Metal (early)', 'Hard Rock (mid)', 'Heavy/Thrash Metal (later)']
+        """
         return split_genres(self[3])
 
     @property
     def score(self) -> int:
+        """
+        >>> search_results[0].score
+        100
+        """
         return int(self[4])
 
-    def __repr__(self):
-        s = " | ".join(self[1:])
-        return "<SimilarArtist: {0}>".format(s)
-
     def get(self) -> "Metallum":
+        """
+        Get the band object
+
+        Returns:
+            Band
+        """
         return self._resultType(self.url)

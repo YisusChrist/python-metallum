@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from metallum.models.AlbumTypes import AlbumTypes
+from metallum.models.album_types import AlbumTypes
 from metallum.operations import album_for_id, band_search, song_search
 
 
@@ -14,7 +14,7 @@ def band():
 
 @pytest.fixture
 def album(band):
-    return band.albums.search(type=AlbumTypes.FULL_LENGTH)[2]
+    return band.albums.search(type=AlbumTypes.FULL_LENGTH.value)[2]
 
 
 @pytest.fixture
@@ -85,13 +85,13 @@ def test_band_albums(metallica_band):
 
 def test_band_full_length_albums(metallica_band):
     # Check if full-length albums exist
-    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH)
+    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH.value)
     assert len(full_length_albums) > 0
 
 
 def test_album_title_and_date(metallica_band):
     # Get the third full-length album (Master of Puppets)
-    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH)
+    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH.value)
     album = full_length_albums[2]
 
     # Check album title
@@ -103,7 +103,7 @@ def test_album_title_and_date(metallica_band):
 
 def test_album_tracks(metallica_band):
     # Get the third full-length album (Master of Puppets)
-    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH)
+    full_length_albums = metallica_band.albums.search(type=AlbumTypes.FULL_LENGTH.value)
     album = full_length_albums[2]
 
     # Check if tracks exist

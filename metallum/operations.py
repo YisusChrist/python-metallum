@@ -1,31 +1,61 @@
+"""Operations module for the Metallum API."""
+
 from urllib.parse import urlencode
 
 from metallum.models import AlbumWrapper, Band
-from metallum.models.Lyrics import Lyrics
-from metallum.models.Results import AlbumResult, BandResult, SongResult
-from metallum.models.Search import Search
+from metallum.models.lyrics import Lyrics
+from metallum.models.results import AlbumResult, BandResult, SongResult
+from metallum.models.search import Search
 from metallum.utils import map_params
 
 
-def band_for_id(id: str) -> "Band":
-    return Band("bands/_/{0}".format(id))
+def band_for_id(band_id: str) -> "Band":
+    """
+    Get a band by its ID.
+
+    Args:
+        band_id: The band's ID.
+
+    Returns:
+        Band: The band with the given ID.
+    """
+    return Band(f"bands/_/{band_id}")
 
 
 def band_search(
     name,
     strict=True,
     genre=None,
-    countries=[],
+    countries=None,
     year_created_from=None,
     year_created_to=None,
-    status=[],
+    status=None,
     themes=None,
     location=None,
     label=None,
     additional_notes=None,
     page_start=0,
 ) -> "Search":
-    """Perform an advanced band search."""
+    """
+    Perform an advanced band search.
+
+    Args:
+        name: The band's name.
+        strict: Whether the search should be strict.
+        genre: The band's genre.
+        countries: The band's countries.
+        year_created_from: The year the band was created from.
+        year_created_to: The year the band was created to.
+        status: The band's status.
+        themes: The band's themes.
+        location: The band's location.
+        label: The band's label.
+        additional_notes: Additional notes about the band.
+        page_start: The page to start the search from.
+
+    Returns:
+        Search: The search results.
+    """
     # Create a dict from the method arguments
     params = locals()
 
@@ -54,8 +84,17 @@ def band_search(
     return Search(url, BandResult)
 
 
-def album_for_id(id: str) -> "AlbumWrapper":
-    return AlbumWrapper(url="albums/_/_/{0}".format(id))
+def album_for_id(album_id: str) -> "AlbumWrapper":
+    """
+    Get an album by its ID.
+
+    Args:
+        album_id: The album's ID.
+
+    Returns:
+        AlbumWrapper: The album with the given ID.
+    """
+    return AlbumWrapper(url=f"albums/_/_/{album_id}")
 
 
 def album_search(
@@ -67,7 +106,7 @@ def album_search(
     year_to=None,
     month_from=None,
     month_to=None,
-    countries=[],
+    countries=None,
     location=None,
     label=None,
     indie_label=False,
@@ -77,11 +116,39 @@ def album_search(
     recording_info=None,
     version_description=None,
     additional_notes=None,
-    types=[],
+    types=None,
     page_start=0,
-    formats=[],
+    formats=None,
 ) -> "Search":
-    """Perform an advanced album search"""
+    """
+    Perform an advanced album search
+
+    Args:
+        title: The album's title.
+        strict: Whether the search should be strict.
+        band: The album's band.
+        band_strict: Whether the band search should be strict.
+        year_from: The year the album was released from.
+        year_to: The year the album was released to.
+        month_from: The month the album was released from.
+        month_to: The month the album was released to.
+        countries: The album's countries.
+        location: The album's location.
+        label: The album's label.
+        indie_label: Whether the label is an indie label.
+        genre: The album's genre.
+        catalog_number: The album's catalog number.
+        identifiers: The album's identifiers.
+        recording_info: The album's recording info.
+        version_description: The album's version description.
+        additional_notes: Additional notes about the album.
+        types: The album's types.
+        page_start: The page to start the search from.
+        formats: The album's formats.
+
+    Returns:
+        Search: The search results.
+    """
     # Create a dict from the method arguments
     params = locals()
 
@@ -137,10 +204,27 @@ def song_search(
     release_strict=True,
     lyrics=None,
     genre=None,
-    types=[],
+    types=None,
     page_start=0,
 ) -> "Search":
-    """Perform an advanced song search"""
+    """
+    Perform an advanced song search
+
+    Args:
+        title: The song's title.
+        strict: Whether the search should be strict.
+        band: The song's band.
+        band_strict: Whether the band search should be strict.
+        release: The song's release.
+        release_strict: Whether the release search should be strict.
+        lyrics: The song's lyrics.
+        genre: The song's genre.
+        types: The song's types.
+        page_start: The page to start the search from.
+
+    Returns:
+        Search: The search results.
+    """
     # Create a dict from the method arguments
     params = locals()
 
@@ -175,5 +259,14 @@ def song_search(
     return Search(url, SongResult)
 
 
-def lyrics_for_id(id: int) -> "Lyrics":
-    return Lyrics(id)
+def lyrics_for_id(lyrics_id: int) -> "Lyrics":
+    """
+    Get lyrics by their ID.
+
+    Args:
+        id: The lyrics' ID.
+
+    Returns:
+        Lyrics: The lyrics with the given ID.
+    """
+    return Lyrics(lyrics_id)

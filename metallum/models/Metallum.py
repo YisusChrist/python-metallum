@@ -1,3 +1,5 @@
+"""Base class for all Metallum classes"""
+
 import time
 
 import requests_cache
@@ -7,13 +9,16 @@ from metallum.consts import CACHE_FILE, REQUEST_TIMEOUT, USER_AGENT
 from metallum.utils import make_absolute
 
 
-class Metallum(object):
+class Metallum:
     """Base metallum class - represents a metallum page"""
 
     def __init__(self, url):
         self._session = requests_cache.CachedSession(cache_name=CACHE_FILE)
         self._session.hooks = {"response": self._make_throttle_hook()}
-        self._session.headers = {"User-Agent": USER_AGENT, "Accept-Encoding": "gzip"}
+        self._session.headers = {
+            "User-Agent": USER_AGENT,
+            "Accept-Encoding": "gzip",
+        }
 
         self._content = self._fetch_page_content(url)
         self._page = PyQuery(self._content)
@@ -34,5 +39,15 @@ class Metallum(object):
         return hook
 
     def _fetch_page_content(self, url) -> str:
+        """
+        Fetch the page content
+
+        Args:
+            url: The URL of the page to fetch
+
+        Returns:
+            str: The page content
+        """
         res = self._session.get(make_absolute(url))
+        # print_response_summary(res)
         return res.text

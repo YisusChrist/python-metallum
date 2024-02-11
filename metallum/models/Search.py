@@ -1,9 +1,12 @@
+"""Search model for the Metallum class."""
+
 import json
 
-from metallum.models.Metallum import Metallum
+from metallum.models.metallum import Metallum
 
 
 class Search(Metallum, list):
+    """Represents a search result"""
 
     def __init__(self, url, result_handler):
         super().__init__(url)

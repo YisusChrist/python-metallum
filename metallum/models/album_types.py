@@ -1,4 +1,10 @@
-class AlbumTypes(object):
+"""Enum of all possible album types"""
+
+
+from enum import Enum
+
+
+class AlbumTypes(Enum):
     """Enum of all possible album types"""
 
     FULL_LENGTH = "Full-length"
