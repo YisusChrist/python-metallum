@@ -7,7 +7,7 @@
     <a href="https://github.com/YisusChrist/python-metallum/forks">
         <img src="https://img.shields.io/github/forks/YisusChrist/python-metallum?color=171b20&label=Forks%20%20&logo=git&labelColor=f1cf8a&logoColor=ffffff">&nbsp;&nbsp;&nbsp;
     </a>
-    <a href="https://github.com/YisusChrist/python-metallum/">
+    <a href="https://github.com/YisusChrist/python-metallum/stargazers">
         <img src="https://img.shields.io/github/stars/YisusChrist/python-metallum?color=171b20&label=Stargazers&logo=octicon-star&labelColor=70a5eb">&nbsp;&nbsp;&nbsp;
     </a>
     <a href="https://github.com/YisusChrist/python-metallum/actions">
@@ -16,7 +16,7 @@
     <a href="https://github.com/YisusChrist/python-metallum/pulls">
         <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/YisusChrist/python-metallum?color=0088ff">&nbsp;&nbsp;&nbsp;
     </a>
-    <a href="https://opensource.org/license/gpl-2-0/">
+    <a href="https://opensource.org/license/mit/">
         <img alt="License" src="https://img.shields.io/github/license/YisusChrist/python-metallum?color=0088ff">
     </a>
 </p>
@@ -24,11 +24,11 @@
 <br>
 
 <p align="center">
-    <a href="https://github.com/YisusChrist/python-metallum/issues/new/choose">Report Bug</a>
+    <a href="https://github.com/YisusChrist/python-metallum/issues/new?assignees=YisusChrist&labels=bug&projects=&template=bug_report.yml">Report Bug</a>
     ·
-    <a href="https://github.com/YisusChrist/python-metallum/issues/new/choose">Request Feature</a>
+    <a href="https://github.com/YisusChrist/python-metallum/issues/new?assignees=YisusChrist&labels=feature&projects=&template=feature_request.yml">Request Feature</a>
     ·
-    <a href="https://github.com/YisusChrist/python-metallum/discussions">Ask Question</a>
+    <a href="https://github.com/YisusChrist/python-metallum/issues/new?assignees=YisusChrist&labels=question&projects=&template=question.yml">Ask Question</a>
     ·
     <a href="https://github.com/YisusChrist/python-metallum/security/policy#reporting-a-vulnerability">Report security bug</a>
 </p>
@@ -71,14 +71,14 @@ Thanks to [py2puml](https://github.com/lucsorel/py2puml) and [PlantUML](https://
 
 Here's a breakdown of the packages needed and their versions:
 
--   [poetry](https://pypi.org/project/poetry) = 1.7.1 (only for manual installation)
--   [requests](https://pypi.org/project/requests) = 2.31.0
--   [requests-cache](https://pypi.org/project/requests-cache) = 1.1.1
--   [pyquery](https://pypi.org/project/pyquery) = 2.0.0
--   [python-dateutil](https://pypi.org/project/python-dateutil) = 2.8.2
--   [lxml](https://pypi.org/project/lxml) = 5.1.0
+- [poetry](https://pypi.org/project/poetry) >= 1.7.1 (only for manual installation)
+- [lxml](https://pypi.org/project/lxml) >= 5.1.0
+- [pyquery](https://pypi.org/project/pyquery) >= 2.0.0
+- [python-dateutil](https://pypi.org/project/python-dateutil) >= 2.8.2
+- [requests-cache](https://pypi.org/project/requests-cache) >= 1.1.1
+- [requests](https://pypi.org/project/requests) >= 2.31.0
 
-> [!NOTE]\
+> [!NOTE]
 > The software has been developed and tested using Python `3.12.1`. The minimum required version to run the software is Python 3.6. Although the software may work with previous versions, it is not guaranteed.
 
 ## Installation
@@ -89,7 +89,7 @@ Here's a breakdown of the packages needed and their versions:
 pip3 install python-metallum
 ```
 
-> [!IMPORTANT]\
+> [!IMPORTANT]
 > For best practices and to avoid potential conflicts with your global Python environment, it is strongly recommended to install this program within a virtual environment. Avoid using the --user option for global installations. We highly recommend using [pipx](https://pypi.org/project/pipx) for a safe and isolated installation experience. Therefore, the appropriate command to install `python-metallum` would be:
 >
 > ```bash
@@ -100,21 +100,21 @@ pip3 install python-metallum
 
 If you prefer to install the program manually, follow these steps:
 
-> [!WARNING]\
+> [!WARNING]
 > This will install the version from the latest commit, not the latest release.
 
 1. Download the latest version of [python-metallum](https://github.com/YisusChrist/python-metallum) from this repository:
 
-    ```bash
-    git clone https://github.com/YisusChrist/python-metallum
-    cd python-metallum
-    ```
+   ```bash
+   git clone https://github.com/YisusChrist/python-metallum
+   cd python-metallum
+   ```
 
 2. Install the package:
 
-    ```bash
-    poetry install
-    ```
+   ```bash
+   poetry install
+   ```
 
 ### Uninstall
 
@@ -189,13 +189,13 @@ Refer to source and doctests for detailed usage
 
 ### How do I contribute to python-metallum?
 
-Before you participate in our delightful community, please read the [code of conduct](.github/CODE_OF_CONDUCT.md).
+Before you participate in our delightful community, please read the [code of conduct](https://github.com/YisusChrist/.github/blob/main/CODE_OF_CONDUCT.md).
 
 I'm far from being an expert and suspect there are many ways to improve – if you have ideas on how to make the configuration easier to maintain (and faster), don't hesitate to fork and send pull requests!
 
 We also need people to test out pull requests. So take a look through [the open issues](https://github.com/YisusChrist/python-metallum/issues) and help where you can.
 
-See [Contributing](.github/CONTRIBUTING.md) for more details.
+See [Contributing](https://github.com/YisusChrist/.github/blob/main/CONTRIBUTING.md) for more details.
 
 ## License
 
