@@ -113,7 +113,7 @@ If you prefer to install the program manually, follow these steps:
 2. Install the package:
 
    ```bash
-   poetry install
+   poetry install --only main
    ```
 
 ### Uninstall
