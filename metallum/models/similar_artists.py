@@ -12,6 +12,9 @@ class SimilarArtists(Metallum, list):
         super().__init__(url)
         data = self._content
 
+        if 'No similar artist has been recommended yet.' in data:
+            return
+
         links_list = PyQuery(data)("a")
         values_list = PyQuery(data)("tr")
 
